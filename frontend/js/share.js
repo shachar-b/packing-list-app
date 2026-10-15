@@ -128,6 +128,29 @@ export async function exportAllDataJson() {
   }
 }
 
+export async function processImportDocument(doc) {
+  if (!doc || doc.format !== 'family-packing-list') {
+    throw new Error('מבנה נתונים לא תקין. יש לוודא שהפורמט הוא family-packing-list.');
+  }
+
+  const res = await api.importData(doc);
+  const tripCount = res.trips?.length || 0;
+  const tripName = res.trips && res.trips[0] ? res.trips[0].name : '';
+
+  if (tripCount === 1) {
+    toast.show(`החופשה "${tripName}" יובאה בהצלחה! 🎉`, 'success');
+  } else {
+    toast.show(`יובאו בהצלחה ${tripCount} חופשות ו-${res.members_created} חברי משפחה! 🎉`, 'success');
+  }
+
+  // Refresh store and select newly imported trip
+  await store.init();
+  if (res.trips && res.trips.length > 0) {
+    await store.selectTrip(res.trips[0].id);
+  }
+  return res;
+}
+
 export function triggerJsonImport() {
   const input = document.createElement('input');
   input.type = 'file';
@@ -141,19 +164,7 @@ export function triggerJsonImport() {
     try {
       const text = await file.text();
       const doc = JSON.parse(text);
-
-      if (!doc || doc.format !== 'family-packing-list') {
-        throw new Error('קובץ לא תקין. פורמט הקובץ אינו נתמך.');
-      }
-
-      const res = await api.importData(doc);
-      toast.show(`יובאו בהצלחה ${res.trips.length} חופשות ו-${res.members_created} חברי משפחה! 🎉`, 'success');
-
-      // Refresh store
-      await store.init();
-      if (res.trips.length > 0) {
-        await store.selectTrip(res.trips[0].id);
-      }
+      await processImportDocument(doc);
     } catch (err) {
       console.error(err);
       toast.show(err.message || 'שגיאה בקריאת הקובץ', 'danger');

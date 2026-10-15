@@ -6,7 +6,7 @@ import { api } from '../api.js';
 import { store } from '../store.js';
 import { modal } from './modal.js';
 import { toast } from './toast.js';
-import { formatWhatsAppSummary, copyToClipboard, exportAllDataJson, triggerJsonImport } from '../share.js';
+import { formatWhatsAppSummary, copyToClipboard, exportAllDataJson, exportCurrentTripJson, triggerJsonImport, processImportDocument } from '../share.js';
 import { openMemberManagementModal } from './member-dialogs.js';
 
 const COMMON_EMOJIS = ['✈️', '🏖️', '⛺', '🎿', '🚗', '🌴', '🏙️', '🎒', '🚂', '🚢', '🏕️', '🧗'];
@@ -71,11 +71,11 @@ export function openTripDrawer() {
         <button id="drawer-manage-members-btn" class="btn btn-secondary" style="justify-content: flex-start;">
           👥 ניהול חברי משפחה
         </button>
+        <button id="drawer-import-btn" class="btn btn-secondary" style="justify-content: flex-start;">
+          📥 ייבוא רשימה מקובץ / הדבקה (JSON)
+        </button>
         <button id="drawer-export-all-btn" class="btn btn-ghost" style="justify-content: flex-start;">
           💾 גיבוי מלא לכל הנתונים (JSON)
-        </button>
-        <button id="drawer-import-btn" class="btn btn-ghost" style="justify-content: flex-start;">
-          📥 שחזור מגיבוי (JSON)
         </button>
       </div>
     </div>
@@ -116,7 +116,8 @@ export function openTripDrawer() {
       });
 
       dialog.querySelector('#drawer-import-btn').addEventListener('click', () => {
-        triggerJsonImport();
+        modal.close('trip-drawer');
+        openImportModal();
       });
     },
   });
@@ -233,7 +234,10 @@ export function openEditTripModal(trip) {
           <label for="edit-trip-is-template" style="font-weight: 500; cursor: pointer;">הגדר רשימה זו כתבנית לשכפול</label>
         </div>
 
-        <div style="border-top: 1px solid var(--color-border); margin-top: 1rem; padding-top: 1rem;">
+        <div style="border-top: 1px solid var(--color-border); margin-top: 1rem; padding-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+          <button type="button" id="export-trip-btn" class="btn btn-secondary" style="width: 100%; justify-content: center;">
+            💾 ייצא חופשה זו לקובץ JSON
+          </button>
           <button type="button" id="delete-trip-btn" class="btn btn-danger-ghost" style="width: 100%; justify-content: center;">
             🗑️ מחק חופשה זו לצמיתות
           </button>
@@ -272,6 +276,10 @@ export function openEditTripModal(trip) {
         } catch (err) {
           toast.show(err.message || 'שגיאה בעדכון חופשה', 'danger');
         }
+      });
+
+      dialog.querySelector('#export-trip-btn')?.addEventListener('click', () => {
+        exportCurrentTripJson();
       });
 
       dialog.querySelector('#delete-trip-btn').addEventListener('click', async () => {
@@ -358,3 +366,62 @@ export function openWhatsAppShareModal() {
     },
   });
 }
+
+export function openImportModal() {
+  const html = `
+    <div class="modal-header">
+      <h2 class="modal-title">📥 ייבוא רשימת חופשה (JSON)</h2>
+      <button class="btn btn-icon" data-dismiss="modal">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size: 0.9rem; color: var(--color-text-muted); margin-bottom: 1rem;">
+        ניתן לייבא חופשה בודדת או גיבוי מלא מקובץ JSON, או להדביק טקסט JSON ישירות:
+      </p>
+
+      <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.25rem;">
+        <label class="form-label" style="margin-bottom: 0;">אפשרות א׳: העלאת קובץ</label>
+        <button type="button" id="import-file-btn" class="btn btn-secondary" style="justify-content: center; gap: 0.5rem;">
+          📂 בחר קובץ JSON מהמכשיר...
+        </button>
+      </div>
+
+      <div style="border-top: 1px dashed var(--color-border); padding-top: 1rem;">
+        <label class="form-label" for="import-json-paste">אפשרות ב׳: הדבקת תוכן JSON ישירות</label>
+        <textarea id="import-json-paste" class="form-textarea" rows="8" placeholder='הדבק כאן את תוכן ה-JSON...' style="font-family: monospace; font-size: 0.85rem; direction: ltr; text-align: left;"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">ביטול</button>
+      <button type="button" id="import-submit-paste-btn" class="btn btn-primary">ייבא נתונים 🚀</button>
+    </div>
+  `;
+
+  modal.open({
+    id: 'import-modal',
+    contentHtml: html,
+    onOpen: (dialog) => {
+      dialog.querySelector('#import-file-btn').addEventListener('click', () => {
+        modal.close('import-modal');
+        triggerJsonImport();
+      });
+
+      dialog.querySelector('#import-submit-paste-btn').addEventListener('click', async () => {
+        const text = dialog.querySelector('#import-json-paste').value.trim();
+        if (!text) {
+          toast.show('יש להדביק תוכן JSON תחילה', 'warning');
+          return;
+        }
+
+        try {
+          const doc = JSON.parse(text);
+          await processImportDocument(doc);
+          modal.close('import-modal');
+        } catch (err) {
+          console.error(err);
+          toast.show(err.message || 'שגיאה בפענוח JSON', 'danger');
+        }
+      });
+    },
+  });
+}
+
