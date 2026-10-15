@@ -1,0 +1,27 @@
+[Unit]
+Description=Family Vacation Packing App
+After=network.target
+
+[Service]
+Type=simple
+User=packing
+Group=packing
+WorkingDirectory=/opt/packing-app
+EnvironmentFile=-/etc/packing-list/packing-list.env
+ExecStart=/opt/packing-app/.venv/bin/python -m app
+Restart=always
+RestartSec=3s
+
+# Lightweight security hardening
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/opt/packing-app/data
+
+# Resource limits (fits easily inside a 256MB/512MB RAM container)
+MemoryMax=256M
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,4 @@
+# Runtime dependencies (installed on the LXC by deploy/setup.sh)
+fastapi>=0.115,<1
+uvicorn>=0.30,<1
+websockets>=13
