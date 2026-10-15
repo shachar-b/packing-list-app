@@ -4,6 +4,7 @@
 
 import { api } from '../api.js';
 import { store } from '../store.js';
+import { offlineQueue } from '../offline-queue.js';
 import { modal } from './modal.js';
 import { toast } from './toast.js';
 
@@ -235,9 +236,19 @@ export function openEditItemModal(item) {
         if (!name) return;
 
         try {
-          await api.updateItem(item.id, { category_id, name, quantity, note, assignee_ids });
+          const res = await offlineQueue.execute('updateItem', [item.id, { category_id, name, quantity, note, assignee_ids }]);
+          if (res.offline) {
+            item.category_id = category_id;
+            item.name = name;
+            item.quantity = quantity;
+            item.note = note;
+            item.assignee_ids = assignee_ids;
+            store.emit('item-updated', item);
+            toast.show('הפריט עודכן (יישמר בשרת בעת חיבור) 💾', 'info');
+          } else {
+            toast.show('הפריט עודכן', 'success');
+          }
           modal.close('edit-item-modal');
-          toast.show('הפריט עודכן', 'success');
         } catch (err) {
           toast.show(err.message || 'שגיאה בעדכון פריט', 'danger');
         }

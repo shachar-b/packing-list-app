@@ -6,6 +6,7 @@
 import { api } from '../api.js';
 import { store } from '../store.js';
 import { realtime } from '../realtime.js';
+import { offlineQueue } from '../offline-queue.js';
 import { toast } from './toast.js';
 import { openTripDrawer, openEditTripModal, openWhatsAppShareModal } from './trip-dialogs.js';
 import { openAddItemModal, openEditItemModal, openAddCategoryModal, openEditCategoryModal, openConfirmResetModal } from './item-dialogs.js';
@@ -20,6 +21,9 @@ export class TripView {
   subscribeToRealtime() {
     realtime.onStatusChange((status) => {
       this.updateSyncStatus(status);
+    });
+    offlineQueue.onChange(() => {
+      this.updateSyncStatus(realtime.status);
     });
   }
 
@@ -46,9 +50,17 @@ export class TripView {
     el.className = `sync-indicator status-${status}`;
     const textEl = el.querySelector('.sync-text');
     if (textEl) {
-      if (status === 'connected') textEl.textContent = 'מחובר ומסונכרן';
-      else if (status === 'reconnecting') textEl.textContent = 'מתחבר מחדש...';
-      else textEl.textContent = 'לא מחובר';
+      const pending = offlineQueue.size();
+      if (offlineQueue.isFlushing) {
+        textEl.textContent = 'מסנכרן שינויים... 🔄';
+      } else if (pending > 0) {
+        const connLabel = status === 'connected' ? 'מחובר' : 'לא מחובר';
+        textEl.textContent = `${connLabel} (${pending} ממתינים לסנכרון)`;
+      } else {
+        if (status === 'connected') textEl.textContent = 'מחובר ומסונכרן';
+        else if (status === 'reconnecting') textEl.textContent = 'מתחבר מחדש...';
+        else textEl.textContent = 'לא מחובר';
+      }
     }
   }
 
@@ -512,7 +524,7 @@ export class TripView {
       });
     });
 
-    // Item Checkbox toggle (Optimistic)
+    // Item Checkbox toggle (Optimistic & Offline-first)
     container.querySelectorAll('[data-item-check]').forEach((input) => {
       input.addEventListener('change', async () => {
         const itemId = parseInt(input.getAttribute('data-item-check'), 10);
@@ -536,9 +548,12 @@ export class TripView {
         store.recalculateCounts();
 
         try {
-          await api.updateItem(itemId, { packed: checked });
+          const res = await offlineQueue.execute('updateItem', [itemId, { packed: checked }]);
+          if (res.offline) {
+            this.updateSyncStatus(realtime.status);
+          }
         } catch (err) {
-          // Revert on failure
+          // Revert on server error
           input.checked = !checked;
           if (row) {
             if (!checked) row.classList.add('is-packed');

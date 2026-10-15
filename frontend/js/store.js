@@ -5,6 +5,7 @@
 
 import { api, CLIENT_ID } from './api.js';
 import { realtime } from './realtime.js';
+import { offlineQueue } from './offline-queue.js';
 
 class AppStore {
   constructor() {
@@ -77,12 +78,30 @@ class AppStore {
   // ------------------------------------------------------------- Initialization
   async init() {
     realtime.connect();
+    offlineQueue.setOnFlushSuccess(() => this.refreshCurrentTrip());
 
-    // Fetch initial trips and members
-    const [trips, members] = await Promise.all([
-      api.getTrips(),
-      api.getMembers(),
-    ]);
+    let trips = [];
+    let members = [];
+
+    try {
+      [trips, members] = await Promise.all([
+        api.getTrips(),
+        api.getMembers(),
+      ]);
+      try {
+        localStorage.setItem('packing_cache_trips', JSON.stringify(trips));
+        localStorage.setItem('packing_cache_members', JSON.stringify(members));
+      } catch (e) {}
+    } catch (err) {
+      console.warn('Network offline during init, loading cached data:', err);
+      try {
+        trips = JSON.parse(localStorage.getItem('packing_cache_trips')) || [];
+        members = JSON.parse(localStorage.getItem('packing_cache_members')) || [];
+      } catch (e) {
+        trips = [];
+        members = [];
+      }
+    }
 
     this.trips = trips;
     this.members = members;
@@ -123,6 +142,9 @@ class AppStore {
     try {
       const updated = await api.getTrip(this.activeTrip.id);
       this.activeTrip = updated;
+      try {
+        localStorage.setItem(`packing_cache_active_trip_${this.activeTrip.id}`, JSON.stringify(updated));
+      } catch (e) {}
       this.updateTripSummaryInList(updated);
       this.emit('trip-changed', this.activeTrip);
     } catch (e) {
@@ -131,19 +153,27 @@ class AppStore {
   }
 
   async selectTrip(tripId, updateHash = true) {
+    let trip = null;
     try {
-      const trip = await api.getTrip(tripId);
-      this.activeTrip = trip;
-      this.loadCollapsedState(tripId);
-      if (updateHash) {
-        window.location.hash = `trip=${tripId}`;
-      }
-      this.updateTripSummaryInList(trip);
-      this.emit('trip-changed', this.activeTrip);
+      trip = await api.getTrip(tripId);
+      try {
+        localStorage.setItem(`packing_cache_active_trip_${tripId}`, JSON.stringify(trip));
+      } catch (e) {}
     } catch (e) {
-      console.error('Failed to select trip:', e);
-      throw e;
+      console.warn('Network offline during selectTrip, checking cache:', e);
+      try {
+        trip = JSON.parse(localStorage.getItem(`packing_cache_active_trip_${tripId}`));
+      } catch (parseErr) {}
+      if (!trip) throw e;
     }
+
+    this.activeTrip = trip;
+    this.loadCollapsedState(tripId);
+    if (updateHash) {
+      window.location.hash = `trip=${tripId}`;
+    }
+    this.updateTripSummaryInList(trip);
+    this.emit('trip-changed', this.activeTrip);
   }
 
   updateTripSummaryInList(tripData) {
