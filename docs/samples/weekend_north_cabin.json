@@ -1,0 +1,360 @@
+{
+  "format": "family-packing-list",
+  "version": 1,
+  "exported_at": "2026-10-16T00:00:00Z",
+  "members": [
+    {
+      "name": "שחר",
+      "color": "#10b981",
+      "emoji": "👨"
+    },
+    {
+      "name": "ענבר",
+      "color": "#ec4899",
+      "emoji": "👩"
+    }
+  ],
+  "trips": [
+    {
+      "name": "סופ״ש בצימר בצפון 🏡🌿",
+      "emoji": "🏡",
+      "is_template": false,
+      "categories": [
+        {
+          "name": "בריכה ומים",
+          "icon": "🏊‍♂️",
+          "items": [
+            {
+              "name": "נודל וגלשני קצף",
+              "quantity": 1,
+              "note": "מתנפחים וגלשנים לבריכה",
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "מתנפחים גדולים",
+              "quantity": 1,
+              "note": "אבובים / מזרני ים גדולים",
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "משאבה / מפוח למתנפחים",
+              "quantity": 1,
+              "note": "לניפוח מהיר של המתנפחים הגדולים",
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "דברי בריכה",
+              "quantity": 1,
+              "note": "משקפות שחייה, מצופים ומשחקי בריכה לילדים",
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "מגבות בריכה מהבית",
+              "quantity": 5,
+              "note": "המגבות האהובות שלנו לבריכה ולדשא (אחת לכל אחד)",
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "בגדי ים",
+              "quantity": 5,
+              "note": "בגד ים לכל אחד מבני המשפחה",
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "כפכפים",
+              "quantity": 5,
+              "note": "זוג כפכפים לכל אחד לבריכה",
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "נעלי מים",
+              "quantity": 5,
+              "note": "לטבילה בנחלים ובמעיינות באזור",
+              "packed": false,
+              "assignees": []
+            }
+          ]
+        },
+        {
+          "name": "ביגוד והנעלה",
+          "icon": "👕",
+          "items": [
+            {
+              "name": "בגדים ליומיום",
+              "quantity": 15,
+              "note": "3 סטים מלאים לכל אחד (חמישי, שישי, שבת)",
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "תחתונים",
+              "quantity": 15,
+              "note": "3 לכל אחד",
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "פיג׳מות",
+              "quantity": 5,
+              "note": "סט פיג'מה לכל אחד",
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "כובעים",
+              "quantity": 5,
+              "note": "כובע שמש רחב שוליים לכל אחד",
+              "packed": false,
+              "assignees": []
+            }
+          ]
+        },
+        {
+          "name": "פארם, רחצה והיגיינה",
+          "icon": "🧴",
+          "items": [
+            {
+              "name": "אופטלגין / משככי כאבים למבוגרים",
+              "quantity": 1,
+              "note": "משככי כאבים וכדורים",
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "תרופות להורדת חום לילדים",
+              "quantity": 1,
+              "note": "נובימול / נורופן + מזרק מדידה",
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "ערכת עזרה ראשונה",
+              "quantity": 1,
+              "note": "פלסטרים, פולידין, פדים לחבישה ותחבושת אלסטית",
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "קרם הגנה",
+              "quantity": 2,
+              "note": "מקדם הגנה SPF גבוה לילדים ולמבוגרים",
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "תכשיר נגד יתושים",
+              "quantity": 1,
+              "note": "אל-תוש / ספריי דוחה יתושים לצפון",
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "קרמים ואיפור לענבר",
+              "quantity": 1,
+              "note": null,
+              "packed": false,
+              "assignees": [
+                "ענבר"
+              ]
+            },
+            {
+              "name": "דאודורנטים",
+              "quantity": 2,
+              "note": "לשחר ולענבר",
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "סבון גוף",
+              "quantity": 1,
+              "note": null,
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "שמפו ומרכך",
+              "quantity": 1,
+              "note": null,
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "משחות ומברשות שיניים",
+              "quantity": 5,
+              "note": "מברשת לכל אחד + משחת שיניים ילדים ומבוגרים",
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "מגבונים רגילים",
+              "quantity": 2,
+              "note": "חבילות סגורות לנסיעה ולצימר",
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "מגבונים נשטפים",
+              "quantity": 2,
+              "note": null,
+              "packed": false,
+              "assignees": []
+            }
+          ]
+        },
+        {
+          "name": "אלקטרוניקה וגאדג'טים",
+          "icon": "🔌",
+          "items": [
+            {
+              "name": "מטען 3 ב-1",
+              "quantity": 1,
+              "note": "לטעינת טלפון, שעון חכם ואוזניות בעמדה אחת",
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "מחשב נייד",
+              "quantity": 1,
+              "note": "כולל מטען למחשב",
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "מטען עם כבל ארוך לענבר",
+              "quantity": 1,
+              "note": "למיטה בצימר",
+              "packed": false,
+              "assignees": [
+                "ענבר"
+              ]
+            },
+            {
+              "name": "תחנת טעינה לטלפונים",
+              "quantity": 1,
+              "note": "עמדת טעינה מרכזית: 3 כבלי Lightning + 2 כבלי Type-C",
+              "packed": false,
+              "assignees": []
+            }
+          ]
+        },
+        {
+          "name": "אוכל, שתייה ומטבח",
+          "icon": "🍳",
+          "items": [
+            {
+              "name": "יין",
+              "quantity": 2,
+              "note": "בקבוקי יין אדום/לבן לערב במרפסת",
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "פותחן יין",
+              "quantity": 1,
+              "note": "שלא ניתקע בלי פותחן!",
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "נינג׳ה גריל",
+              "quantity": 1,
+              "note": "כולל כבל חשמל ורשתות צלייה",
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "מקציף חלב נספרסו",
+              "quantity": 1,
+              "note": "לקפה מפנק של בוקר",
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "קטשופ",
+              "quantity": 1,
+              "note": null,
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "מיוטשופ",
+              "quantity": 1,
+              "note": null,
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "חטיפים לנסיעה",
+              "quantity": 1,
+              "note": "נשנושים לדרך באוטו לילדים",
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "פנקייקים",
+              "quantity": 1,
+              "note": "פנקייקים מוכנים בקופסה לנשנוש בדרך באוטו! 🥞",
+              "packed": false,
+              "assignees": []
+            }
+          ]
+        },
+        {
+          "name": "פנאי, משחקים וספורט",
+          "icon": "🎲",
+          "items": [
+            {
+              "name": "טאקי",
+              "quantity": 1,
+              "note": "קלפי טאקי למשחק משפחתי",
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "משחקי קופסא",
+              "quantity": 2,
+              "note": "משחקים שמתאימים לערב בצימר",
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "דברי יצירה",
+              "quantity": 1,
+              "note": "טושים, דפי ציור ומדבקות לילדים לשעות החמות",
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "כדורגל",
+              "quantity": 1,
+              "note": "לדשא בצימר",
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "פריזבי",
+              "quantity": 1,
+              "note": "למשחק במדשאה",
+              "packed": false,
+              "assignees": []
+            },
+            {
+              "name": "תיקי מים",
+              "quantity": 2,
+              "note": "שלוקרים 2-3 ליטר לטיולים רגליים",
+              "packed": false,
+              "assignees": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
