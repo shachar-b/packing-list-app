@@ -4,21 +4,36 @@
   "exported_at": "2026-10-16T00:00:00Z",
   "members": [
     {
-      "name": "שחר",
+      "name": "כל המשפחה",
+      "color": "#6366f1",
+      "emoji": "👨‍👩‍👧‍👦"
+    },
+    {
+      "name": "הורים",
+      "color": "#0ea5e9",
+      "emoji": "🧑‍🤝‍🧑"
+    },
+    {
+      "name": "אבא",
       "color": "#10b981",
       "emoji": "👨"
     },
     {
-      "name": "ענבר",
+      "name": "אמא",
       "color": "#ec4899",
       "emoji": "👩"
+    },
+    {
+      "name": "ילדים",
+      "color": "#f59e0b",
+      "emoji": "🧒"
     }
   ],
   "trips": [
     {
-      "name": "סופ״ש בצימר בצפון 🏡🌿",
+      "name": "תבנית: סופ״ש בצימר בצפון 🏡🌿",
       "emoji": "🏡",
-      "is_template": false,
+      "is_template": true,
       "categories": [
         {
           "name": "בריכה ומים",
@@ -29,56 +44,72 @@
               "quantity": 1,
               "note": "מתנפחים וגלשנים לבריכה",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "ילדים"
+              ]
             },
             {
               "name": "מתנפחים גדולים",
               "quantity": 1,
               "note": "אבובים / מזרני ים גדולים",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "ילדים"
+              ]
             },
             {
               "name": "משאבה / מפוח למתנפחים",
               "quantity": 1,
               "note": "לניפוח מהיר של המתנפחים הגדולים",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "הורים"
+              ]
             },
             {
               "name": "דברי בריכה",
               "quantity": 1,
               "note": "משקפות שחייה, מצופים ומשחקי בריכה לילדים",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "ילדים"
+              ]
             },
             {
               "name": "מגבות בריכה מהבית",
               "quantity": 5,
               "note": "המגבות האהובות שלנו לבריכה ולדשא (אחת לכל אחד)",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "כל המשפחה"
+              ]
             },
             {
               "name": "בגדי ים",
               "quantity": 5,
               "note": "בגד ים לכל אחד מבני המשפחה",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "כל המשפחה"
+              ]
             },
             {
               "name": "כפכפים",
               "quantity": 5,
               "note": "זוג כפכפים לכל אחד לבריכה",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "כל המשפחה"
+              ]
             },
             {
               "name": "נעלי מים",
               "quantity": 5,
               "note": "לטבילה בנחלים ובמעיינות באזור",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "כל המשפחה"
+              ]
             }
           ]
         },
@@ -91,28 +122,36 @@
               "quantity": 15,
               "note": "3 סטים מלאים לכל אחד (חמישי, שישי, שבת)",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "כל המשפחה"
+              ]
             },
             {
               "name": "תחתונים",
               "quantity": 15,
               "note": "3 לכל אחד",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "כל המשפחה"
+              ]
             },
             {
               "name": "פיג׳מות",
               "quantity": 5,
               "note": "סט פיג'מה לכל אחד",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "כל המשפחה"
+              ]
             },
             {
               "name": "כובעים",
               "quantity": 5,
               "note": "כובע שמש רחב שוליים לכל אחד",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "כל המשפחה"
+              ]
             }
           ]
         },
@@ -125,86 +164,108 @@
               "quantity": 1,
               "note": "משככי כאבים וכדורים",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "הורים"
+              ]
             },
             {
               "name": "תרופות להורדת חום לילדים",
               "quantity": 1,
               "note": "נובימול / נורופן + מזרק מדידה",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "הורים"
+              ]
             },
             {
               "name": "ערכת עזרה ראשונה",
               "quantity": 1,
               "note": "פלסטרים, פולידין, פדים לחבישה ותחבושת אלסטית",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "הורים"
+              ]
             },
             {
               "name": "קרם הגנה",
               "quantity": 2,
               "note": "מקדם הגנה SPF גבוה לילדים ולמבוגרים",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "כל המשפחה"
+              ]
             },
             {
               "name": "תכשיר נגד יתושים",
               "quantity": 1,
               "note": "אל-תוש / ספריי דוחה יתושים לצפון",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "הורים"
+              ]
             },
             {
-              "name": "קרמים ואיפור לענבר",
+              "name": "קרמים ואיפור לאמא",
               "quantity": 1,
               "note": null,
               "packed": false,
               "assignees": [
-                "ענבר"
+                "אמא"
               ]
             },
             {
               "name": "דאודורנטים",
               "quantity": 2,
-              "note": "לשחר ולענבר",
+              "note": "דאודורנט להורים",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "הורים"
+              ]
             },
             {
               "name": "סבון גוף",
               "quantity": 1,
               "note": null,
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "כל המשפחה"
+              ]
             },
             {
               "name": "שמפו ומרכך",
               "quantity": 1,
               "note": null,
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "כל המשפחה"
+              ]
             },
             {
               "name": "משחות ומברשות שיניים",
               "quantity": 5,
               "note": "מברשת לכל אחד + משחת שיניים ילדים ומבוגרים",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "כל המשפחה"
+              ]
             },
             {
               "name": "מגבונים רגילים",
               "quantity": 2,
               "note": "חבילות סגורות לנסיעה ולצימר",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "הורים"
+              ]
             },
             {
               "name": "מגבונים נשטפים",
               "quantity": 2,
               "note": null,
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "כל המשפחה"
+              ]
             }
           ]
         },
@@ -217,22 +278,26 @@
               "quantity": 1,
               "note": "לטעינת טלפון, שעון חכם ואוזניות בעמדה אחת",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "אבא"
+              ]
             },
             {
               "name": "מחשב נייד",
               "quantity": 1,
               "note": "כולל מטען למחשב",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "אבא"
+              ]
             },
             {
-              "name": "מטען עם כבל ארוך לענבר",
+              "name": "מטען עם כבל ארוך לאמא",
               "quantity": 1,
-              "note": "למיטה בצימר",
+              "note": "כבל טעינה ארוך למיטה",
               "packed": false,
               "assignees": [
-                "ענבר"
+                "אמא"
               ]
             },
             {
@@ -240,7 +305,9 @@
               "quantity": 1,
               "note": "עמדת טעינה מרכזית: 3 כבלי Lightning + 2 כבלי Type-C",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "הורים"
+              ]
             }
           ]
         },
@@ -253,56 +320,72 @@
               "quantity": 2,
               "note": "בקבוקי יין אדום/לבן לערב במרפסת",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "הורים"
+              ]
             },
             {
               "name": "פותחן יין",
               "quantity": 1,
               "note": "שלא ניתקע בלי פותחן!",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "הורים"
+              ]
             },
             {
               "name": "נינג׳ה גריל",
               "quantity": 1,
               "note": "כולל כבל חשמל ורשתות צלייה",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "הורים"
+              ]
             },
             {
               "name": "מקציף חלב נספרסו",
               "quantity": 1,
               "note": "לקפה מפנק של בוקר",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "הורים"
+              ]
             },
             {
               "name": "קטשופ",
               "quantity": 1,
               "note": null,
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "כל המשפחה"
+              ]
             },
             {
               "name": "מיוטשופ",
               "quantity": 1,
               "note": null,
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "כל המשפחה"
+              ]
             },
             {
               "name": "חטיפים לנסיעה",
               "quantity": 1,
               "note": "נשנושים לדרך באוטו לילדים",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "ילדים"
+              ]
             },
             {
               "name": "פנקייקים",
               "quantity": 1,
               "note": "פנקייקים מוכנים בקופסה לנשנוש בדרך באוטו! 🥞",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "כל המשפחה"
+              ]
             }
           ]
         },
@@ -315,42 +398,54 @@
               "quantity": 1,
               "note": "קלפי טאקי למשחק משפחתי",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "כל המשפחה"
+              ]
             },
             {
               "name": "משחקי קופסא",
               "quantity": 2,
               "note": "משחקים שמתאימים לערב בצימר",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "כל המשפחה"
+              ]
             },
             {
               "name": "דברי יצירה",
               "quantity": 1,
               "note": "טושים, דפי ציור ומדבקות לילדים לשעות החמות",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "ילדים"
+              ]
             },
             {
               "name": "כדורגל",
               "quantity": 1,
               "note": "לדשא בצימר",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "כל המשפחה"
+              ]
             },
             {
               "name": "פריזבי",
               "quantity": 1,
               "note": "למשחק במדשאה",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "כל המשפחה"
+              ]
             },
             {
               "name": "תיקי מים",
               "quantity": 2,
               "note": "שלוקרים 2-3 ליטר לטיולים רגליים",
               "packed": false,
-              "assignees": []
+              "assignees": [
+                "הורים"
+              ]
             }
           ]
         }
