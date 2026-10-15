@@ -98,6 +98,15 @@ This document tracks feature requests, UX improvements, and architectural ideas 
 
 ---
 
+## 11. 📅 Trip Departure Date & Days-Only Countdown
+- **Concept:** Allow attaching an optional departure date to active (non-template) trips to give a clear sense of how much preparation time is left.
+- **Behavior:**
+  - Date picker field in Create/Edit Trip dialogs (hidden or disabled when `is_template` is checked).
+  - Displays a clean, **days-only** countdown badge in the trip header and drawer (e.g., `בעוד 5 ימים`, `מחר!`, `היום! 🎉`) — no hours/minutes/seconds ticker noise.
+- **Status:** Backlog.
+
+---
+
 ## ✅ Completed Features
 
 ### 📴 Offline Mutations Queue & Reconciliation
