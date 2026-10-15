@@ -2,8 +2,8 @@
  * Item & Category Dialogs (Add/Edit Item, Add/Edit Category, Reset Trip).
  */
 
-import { api } from './api.js';
-import { store } from './store.js';
+import { api } from '../api.js';
+import { store } from '../store.js';
 import { modal } from './modal.js';
 import { toast } from './toast.js';
 

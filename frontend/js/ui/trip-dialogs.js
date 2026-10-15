@@ -2,8 +2,8 @@
  * Trip Dialogs: Trip Drawer/Switcher, Create/Clone Trip, Edit Trip, WhatsApp Share.
  */
 
-import { api } from './api.js';
-import { store } from './store.js';
+import { api } from '../api.js';
+import { store } from '../store.js';
 import { modal } from './modal.js';
 import { toast } from './toast.js';
 import { formatWhatsAppSummary, copyToClipboard, exportAllDataJson, triggerJsonImport } from '../share.js';
