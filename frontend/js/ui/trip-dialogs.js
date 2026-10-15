@@ -152,7 +152,12 @@ export function openNewTripModal(defaultIsTemplate = false) {
           <label class="form-label" for="trip-source">התחל מרשימה קיימת (שכפול פריטים ריקים)</label>
           <select id="trip-source" class="form-select">
             <option value="">-- רשימה ריקה לגמרי --</option>
-            ${templatesAndTrips.map((t) => `<option value="${t.id}">${t.is_template ? '📋 תבנית: ' : '🧳 '} ${t.name}</option>`).join('')}
+            ${templatesAndTrips.map((t) => {
+              const cleanName = t.name.replace(/^(תבנית:\s*)+/, '');
+              const icon = t.is_template ? '📋' : (t.emoji || '🧳');
+              const label = t.is_template ? `תבנית: ${cleanName}` : cleanName;
+              return `<option value="${t.id}">${icon} ${label}</option>`;
+            }).join('')}
           </select>
           <span class="form-hint">שכפול מעתיק את כל הקטגוריות והפריטים כשהם מסומנים כלא ארוזים.</span>
         </div>
