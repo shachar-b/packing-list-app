@@ -10,20 +10,34 @@ Features are **sorted by total estimated effort (Scoping/Design + Implementation
 
 | Rank | Feature | Scoping Effort | Impl & Test Effort | UX / QoL Impact | Schema Change? |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| **1** | 🔑 Pre-Departure House Checklist | Very Low | Very Low | High | No |
-| **2** | 👥 Individual Family Member Packing Views | Very Low | Low | High | No |
-| **3** | 📲 Installable PWA + Offline Asset Caching | Very Low | Low | Very High | No |
-| **4** | ⚡ "Last-Minute / Morning-Of" Flag (`דקה 90`) | Low | Low–Med | Very High | Yes (`items`) |
-| **5** | 🛒 "Need to Buy" Pre-Trip Status (`לקנות`) | Low–Med | Low–Med | High | Yes (`items`) |
-| **6** | 🧩 Modular "Add-on Packs" (Mix & Match) | Medium | Medium | Very High | Optional |
-| **7** | 🔄 "Return-Trip / Repacking Check" Mode | Medium | Medium | High | Yes (`items`) |
-| **8** | 🧮 Duration / Nights Auto-Scaler | Med–High | Med–High | Med–High | Yes (`trips`/`items`) |
-| **9** | 🌲 Conditional & Dependent Sub-Items | High | High | Med–High | Yes (`items`) |
-| **10** | 🎒 Bag / Container Organization | High ⚠️ | High | Med–High | Yes |
+| **1** | 📋 Template "Blueprint Mode" (No Checkboxes) | Very Low | Very Low | High | No |
+| **2** | 🔑 Pre-Departure House Checklist | Very Low | Very Low | High | No |
+| **3** | 👥 Individual Family Member Packing Views | Very Low | Low | High | No |
+| **4** | 📲 Installable PWA + Offline Asset Caching | Very Low | Low | Very High | No |
+| **5** | ⚡ "Last-Minute / Morning-Of" Flag (`דקה 90`) | Low | Low–Med | Very High | Yes (`items`) |
+| **6** | 🛒 "Need to Buy" Pre-Trip Status (`לקנות`) | Low–Med | Low–Med | High | Yes (`items`) |
+| **7** | 🧩 Modular "Add-on Packs" (Mix & Match) | Medium | Medium | Very High | Optional |
+| **8** | 🔄 "Return-Trip / Repacking Check" Mode | Medium | Medium | High | Yes (`items`) |
+| **9** | 🧮 Duration / Nights Auto-Scaler | Med–High | Med–High | Med–High | Yes (`trips`/`items`) |
+| **10** | 🌲 Conditional & Dependent Sub-Items | High | High | Med–High | Yes (`items`) |
+| **11** | 🎒 Bag / Container Organization | High ⚠️ | High | Med–High | Yes |
 
 ---
 
-## 1. 🔑 "Pre-Departure House Checklist" Section (סגירת הבית לפני יציאה)
+## 1. 📋 Template "Blueprint Mode" (Disable Checkboxes & Streamline Editing)
+- **Effort:** 🟢 Very Low (Scoping: Minimal | Impl & Test: ~25 mins)
+- **UX / QoL Impact:** ⭐ High — Prevents accidentally packing inside a master template and makes template maintenance faster.
+- **Concept:** Make templates feel unmistakably like master blueprints rather than active packing checklists.
+- **Behavior:**
+  - Disable/hide item checkboxes when `trip.is_template === true`.
+  - Tapping anywhere on an item row in a template opens the **Edit Item** modal directly (making it much faster to tweak quantities, notes, or family tags).
+  - Replace the `0%` packing progress bar, `"הסתר ארוזים"`, and `"אפס סימונים"` controls with a clean template banner and a prominent **"➕ צור נסיעה חדשה מתבנית זו"** CTA button.
+  - Show simple item counts (`85 פריטים`) instead of packed ratios (`0/85`) in category headers and the trips drawer for templates.
+- **Status:** Backlog — Ready to build.
+
+---
+
+## 2. 🔑 "Pre-Departure House Checklist" Section (סגירת הבית לפני יציאה)
 - **Effort:** 🟢 Very Low (Scoping: Minimal | Impl & Test: ~30 mins)
 - **UX / QoL Impact:** ⭐ High — Immediate peace of mind right before locking the front door.
 - **Concept:** Final verification tasks before leaving the house (take out trash, turn off ACs & boiler, close shutters/windows, pause/run robot vacuum, lock doors).
@@ -32,7 +46,7 @@ Features are **sorted by total estimated effort (Scoping/Design + Implementation
 
 ---
 
-## 2. 👥 Individual Family Member Packing Views ("My Packing Mode")
+## 3. 👥 Individual Family Member Packing Views ("My Packing Mode")
 - **Effort:** 🟢 Very Low–Low (Scoping: Very Low | Impl & Test: ~45 mins)
 - **UX / QoL Impact:** ⭐ High — Great when multiple family members pack in parallel or kids pack their own gear.
 - **Concept:** Building on the existing member filter in `store.js`, provide a focused "My Packing Mode" toggle where a parent or child sees *only* their assigned items, empty categories are auto-collapsed, and a personal progress bar is shown (`אמא: 8/10 נארזו`).
@@ -41,7 +55,7 @@ Features are **sorted by total estimated effort (Scoping/Design + Implementation
 
 ---
 
-## 3. 📲 Installable PWA + Offline Asset Caching (אפליקציית מסך בית מלאה)
+## 4. 📲 Installable PWA + Offline Asset Caching (אפליקציית מסך בית מלאה)
 - **Effort:** 🟢 Low (Scoping: Very Low | Impl & Test: ~1 hour)
 - **UX / QoL Impact:** 🌟 Very High — Native full-screen app feel on iOS/Android and instant cold-start even with zero reception.
 - **Concept:** Pair our existing `localStorage` data cache and offline mutation queue with a Service Worker and Web App Manifest.
@@ -52,7 +66,7 @@ Features are **sorted by total estimated effort (Scoping/Design + Implementation
 
 ---
 
-## 4. ⚡ "Last-Minute / Morning-Of" Flag (דקה 90 / בוקר היציאה)
+## 5. ⚡ "Last-Minute / Morning-Of" Flag (דקה 90 / בוקר היציאה)
 - **Effort:** 🟡 Low–Medium (Scoping: Low | Impl & Test: ~1.5 hours)
 - **UX / QoL Impact:** 🌟 Very High — Solves one of the biggest departure-morning pain points.
 - **Concept:** Distinguish between items packed the night before and items that can only be packed right before walking out the door (toothbrushes, bedside chargers, chilled food/pancakes from the fridge, laptop, medications).
@@ -63,7 +77,7 @@ Features are **sorted by total estimated effort (Scoping/Design + Implementation
 
 ---
 
-## 5. 🛒 "Need to Buy" Pre-Trip Status / Shopping Filter (להשלים בקניות)
+## 6. 🛒 "Need to Buy" Pre-Trip Status / Shopping Filter (להשלים בקניות)
 - **Effort:** 🟡 Low–Medium (Scoping: Low–Med | Impl & Test: ~1.5 hours)
 - **UX / QoL Impact:** ⭐ High — Bridges pre-trip errands and actual packing.
 - **Concept:** Reviewing the packing list a few days before the trip often reveals missing or depleted items (sunscreen, mosquito spray, wine, road snacks).
@@ -75,7 +89,7 @@ Features are **sorted by total estimated effort (Scoping/Design + Implementation
 
 ---
 
-## 6. 🧩 Modular "Add-on Packs" / Mini-Templates (Mix & Match)
+## 7. 🧩 Modular "Add-on Packs" / Mini-Templates (Mix & Match)
 - **Effort:** 🟡 Medium (Scoping: Medium | Impl & Test: ~2 hours)
 - **UX / QoL Impact:** 🌟 Very High — Keeps base templates lean while making special trip variations effortless.
 - **Concept:** Instead of maintaining many monolithic templates for every permutation of trip, allow injecting small modular "equipment packs" (5–10 items) into any active trip with a single click.
@@ -88,7 +102,7 @@ Features are **sorted by total estimated effort (Scoping/Design + Implementation
 
 ---
 
-## 7. 🔄 "Return-Trip / Repacking Check" Mode (אריזה לחזרה הביתה)
+## 8. 🔄 "Return-Trip / Repacking Check" Mode (אריזה לחזרה הביתה)
 - **Effort:** 🟡 Medium (Scoping: Medium | Impl & Test: ~2–2.5 hours)
 - **UX / QoL Impact:** ⭐ High — Prevents leaving chargers in wall sockets or favorite towels at the cabin.
 - **Concept:** At the end of the vacation, reset the checklist for permanent gear so you can check items off as they go back into the car, while ignoring consumables that were eaten or used.
@@ -99,7 +113,7 @@ Features are **sorted by total estimated effort (Scoping/Design + Implementation
 
 ---
 
-## 8. 🧮 Duration / Nights Auto-Scaler (מחשבון כמויות לפי מספר לילות)
+## 9. 🧮 Duration / Nights Auto-Scaler (מחשבון כמויות לפי מספר לילות)
 - **Effort:** 🟠 Medium–High (Scoping: Med–High | Impl & Test: ~2.5–3 hours)
 - **UX / QoL Impact:** ⭐ Medium–High — Saves manual quantity adjustments when cloning templates for longer/shorter trips.
 - **Concept:** Scale per-day items (clothes, underwear, pajamas) automatically when cloning a 2-night template into a 4-night trip, while keeping fixed gear (Ninja Grill, chargers, shampoo) at `1`.
@@ -110,16 +124,16 @@ Features are **sorted by total estimated effort (Scoping/Design + Implementation
 
 ---
 
-## 9. 🌲 Conditional & Dependent Sub-Items (Nested Gear)
+## 10. 🌲 Conditional & Dependent Sub-Items (Nested Gear)
 - **Effort:** 🔴 High (Scoping: High | Impl & Test: ~3.5–4 hours)
-- **UX / QoL Impact:** ⭐ Medium–High (Note: much of the value can also be achieved more simply via **#6 Modular Add-on Packs**).
+- **UX / QoL Impact:** ⭐ Medium–High (Note: much of the value can also be achieved more simply via **#7 Modular Add-on Packs**).
 - **Concept:** Some packing items only have a reason to exist if their "parent" equipment is being packed (e.g., `נינג׳ה גריל` -> `מלקחיים`, `נייר אפייה מותאם לנינג'ה`, `תרסיס שמן`).
 - **Behavior:** Requires parent-child item hierarchy (`parent_item_id`), nested mobile rendering, and progress calculation rules when a parent item is unchecked or omitted.
 - **Status:** Backlog.
 
 ---
 
-## 10. 🎒 Bag / Container Organization (חלוקה לתיקים / מיקום ברכב)
+## 11. 🎒 Bag / Container Organization (חלוקה לתיקים / מיקום ברכב)
 - **Effort:** 🔴 High (Scoping: High ⚠️ | Impl & Test: ~4+ hours)
 - **UX / QoL Impact:** ⭐ Medium–High
 - **Concept:** Know which bag holds which item (`🚗 תיק לאוטו`, `🏖️ תיק בריכה נגיש`, `🧊 צידנית`, `🧳 מזוודה`) so you don't unpack the entire trunk on the way north just to find swimsuits or snacks.
