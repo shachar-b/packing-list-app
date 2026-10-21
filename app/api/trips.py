@@ -28,10 +28,21 @@ async def create_trip(body: TripCreate, db: DB, bus: Bus, origin: ClientId) -> d
     with db.transaction():
         if body.source_trip_id is not None:
             trip_id = clone_trip(
-                db, body.source_trip_id, name=body.name, emoji=body.emoji, is_template=body.is_template
+                db,
+                body.source_trip_id,
+                name=body.name,
+                emoji=body.emoji,
+                is_template=body.is_template,
+                departure_date=body.departure_date,
             )
         else:
-            trip_id = repo.create_trip(db, name=body.name, emoji=body.emoji, is_template=body.is_template)
+            trip_id = repo.create_trip(
+                db,
+                name=body.name,
+                emoji=body.emoji,
+                is_template=body.is_template,
+                departure_date=body.departure_date,
+            )
         detail = repo.get_detail(db, trip_id)
     await bus.publish("trip.created", _summary_of(detail), trip_id=trip_id, origin=origin)
     return detail
@@ -62,7 +73,14 @@ async def delete_trip(trip_id: int, db: DB, bus: Bus, origin: ClientId) -> Respo
 @router.post("/{trip_id}/clone", response_model=TripDetail, status_code=status.HTTP_201_CREATED)
 async def clone(trip_id: int, body: CloneRequest, db: DB, bus: Bus, origin: ClientId) -> dict:
     with db.transaction():
-        new_id = clone_trip(db, trip_id, name=body.name, emoji=body.emoji, is_template=body.is_template)
+        new_id = clone_trip(
+            db,
+            trip_id,
+            name=body.name,
+            emoji=body.emoji,
+            is_template=body.is_template,
+            departure_date=body.departure_date,
+        )
         detail = repo.get_detail(db, new_id)
     await bus.publish("trip.created", _summary_of(detail), trip_id=new_id, origin=origin)
     return detail

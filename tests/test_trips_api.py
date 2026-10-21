@@ -83,3 +83,25 @@ def test_empty_patch_is_noop(client: TestClient, api: Api) -> None:
 
 def test_delete_unknown_trip(client: TestClient) -> None:
     assert client.delete("/api/trips/12345").status_code == 404
+
+
+def test_trip_departure_date_lifecycle(client: TestClient, api: Api) -> None:
+    trip = api.trip("חופשת סוכות", departure_date="2026-10-28")
+    assert trip["departure_date"] == "2026-10-28"
+
+    # Update departure date
+    resp = client.patch(f"/api/trips/{trip['id']}", json={"departure_date": "2026-11-05"})
+    assert resp.status_code == 200 and resp.json()["departure_date"] == "2026-11-05"
+
+    # Converting a trip to a template automatically clears departure_date
+    resp = client.patch(f"/api/trips/{trip['id']}", json={"is_template": True})
+    assert resp.status_code == 200 and resp.json()["departure_date"] is None
+
+    # Creating a template ignores departure_date
+    tmpl = api.trip("תבנית", is_template=True, departure_date="2026-12-01")
+    assert tmpl["departure_date"] is None
+
+    # Invalid calendar dates are rejected
+    assert client.post("/api/trips", json={"name": "x", "departure_date": "2026-02-31"}).status_code == 422
+    assert client.post("/api/trips", json={"name": "x", "departure_date": "not-a-date"}).status_code == 422
+

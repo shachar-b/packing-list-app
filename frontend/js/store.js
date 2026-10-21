@@ -183,6 +183,7 @@ class AppStore {
       name: tripData.name,
       emoji: tripData.emoji,
       is_template: tripData.is_template,
+      departure_date: tripData.is_template ? null : (tripData.departure_date ?? null),
       total_items: tripData.total_items ?? (tripData.categories ? tripData.categories.reduce((acc, c) => acc + c.items.length, 0) : 0),
       packed_items: tripData.packed_items ?? (tripData.categories ? tripData.categories.reduce((acc, c) => acc + c.items.filter(i => i.packed).length, 0) : 0),
       created_at: tripData.created_at,
@@ -195,6 +196,30 @@ class AppStore {
       this.trips.unshift(summary);
     }
     this.emit('trips-list-changed', this.trips);
+  }
+
+  applyItemUpdate(updatedItem) {
+    if (!this.activeTrip || !updatedItem) return;
+    let found = false;
+    for (const cat of this.activeTrip.categories) {
+      const idx = cat.items.findIndex((i) => i.id === updatedItem.id);
+      if (idx !== -1) {
+        if (updatedItem.category_id !== cat.id) {
+          // Item moved to another category
+          cat.items.splice(idx, 1);
+          const targetCat = this.activeTrip.categories.find((c) => c.id === updatedItem.category_id);
+          if (targetCat) targetCat.items.push(updatedItem);
+        } else {
+          cat.items[idx] = { ...cat.items[idx], ...updatedItem };
+        }
+        found = true;
+        break;
+      }
+    }
+    if (found) {
+      this.recalculateCounts();
+      this.emit('item-updated', updatedItem);
+    }
   }
 
   // ----------------------------------------------------------------- Filtering
@@ -237,27 +262,7 @@ class AppStore {
 
     realtime.on('item.updated', (event) => {
       if (this.activeTrip && event.trip_id === this.activeTrip.id) {
-        const updatedItem = event.data;
-        let found = false;
-        for (const cat of this.activeTrip.categories) {
-          const idx = cat.items.findIndex((i) => i.id === updatedItem.id);
-          if (idx !== -1) {
-            if (updatedItem.category_id !== cat.id) {
-              // Item moved to another category
-              cat.items.splice(idx, 1);
-              const targetCat = this.activeTrip.categories.find((c) => c.id === updatedItem.category_id);
-              if (targetCat) targetCat.items.push(updatedItem);
-            } else {
-              cat.items[idx] = updatedItem;
-            }
-            found = true;
-            break;
-          }
-        }
-        if (found) {
-          this.recalculateCounts();
-          this.emit('item-updated', updatedItem);
-        }
+        this.applyItemUpdate(event.data);
       }
     });
 
@@ -340,6 +345,7 @@ class AppStore {
         this.activeTrip.name = summary.name;
         this.activeTrip.emoji = summary.emoji;
         this.activeTrip.is_template = summary.is_template;
+        this.activeTrip.departure_date = summary.is_template ? null : (summary.departure_date ?? null);
         this.emit('trip-info-updated', this.activeTrip);
       }
     });
@@ -411,3 +417,44 @@ class AppStore {
 }
 
 export const store = new AppStore();
+
+/**
+ * Compute a days-only countdown descriptor for a non-template trip's departure_date ('YYYY-MM-DD').
+ * Returns null if no date is set or if the trip is a template.
+ */
+export function formatDepartureCountdown(departureDateStr, isTemplate = false) {
+  if (isTemplate || !departureDateStr || !/^\d{4}-\d{2}-\d{2}$/.test(departureDateStr)) {
+    return null;
+  }
+  const [y, m, d] = departureDateStr.split('-').map((n) => parseInt(n, 10));
+  const target = new Date(y, m - 1, d);
+  if (Number.isNaN(target.getTime())) return null;
+
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const diffDays = Math.round((target.getTime() - today.getTime()) / 86400000);
+  const formattedDate = `${String(d).padStart(2, '0')}/${String(m).padStart(2, '0')}/${y}`;
+
+  if (diffDays === 0) {
+    return { text: 'היום! 🎉', days: 0, tone: 'today', formattedDate };
+  }
+  if (diffDays === 1) {
+    return { text: 'מחר! 🎒', days: 1, tone: 'soon', formattedDate };
+  }
+  if (diffDays === 2) {
+    return { text: 'בעוד יומיים', days: 2, tone: 'soon', formattedDate };
+  }
+  if (diffDays > 2) {
+    return {
+      text: `בעוד ${diffDays} ימים`,
+      days: diffDays,
+      tone: diffDays <= 7 ? 'soon' : 'upcoming',
+      formattedDate,
+    };
+  }
+  if (diffDays === -1) {
+    return { text: 'אתמול', days: -1, tone: 'past', formattedDate };
+  }
+  return { text: `לפני ${Math.abs(diffDays)} ימים`, days: diffDays, tone: 'past', formattedDate };
+}
+

@@ -9,7 +9,7 @@ from app.errors import NotFoundError
 from app.repositories import NOW_SQL, categories
 
 _SUMMARY_SQL = """
-SELECT t.id, t.name, t.emoji, t.is_template, t.created_at, t.updated_at,
+SELECT t.id, t.name, t.emoji, t.is_template, t.departure_date, t.created_at, t.updated_at,
        COUNT(i.id)                     AS total_items,
        COALESCE(SUM(i.packed), 0)      AS packed_items
 FROM trips t
@@ -49,15 +49,24 @@ def ensure_exists(db: Database, trip_id: int) -> None:
         raise NotFoundError(f"Trip {trip_id} not found")
 
 
-def create_trip(db: Database, *, name: str, emoji: str | None = None, is_template: bool = False) -> int:
+def create_trip(
+    db: Database,
+    *,
+    name: str,
+    emoji: str | None = None,
+    is_template: bool = False,
+    departure_date: str | None = None,
+) -> int:
+    final_date = None if is_template else (departure_date or None)
     cur = db.execute(
-        "INSERT INTO trips (name, emoji, is_template) VALUES (?, ?, ?)", (name, emoji or None, int(is_template))
+        "INSERT INTO trips (name, emoji, is_template, departure_date) VALUES (?, ?, ?, ?)",
+        (name, emoji or None, int(is_template), final_date),
     )
     return int(cur.lastrowid)
 
 
 def update_trip(db: Database, trip_id: int, changes: dict[str, Any]) -> None:
-    ensure_exists(db, trip_id)
+    current = get_summary(db, trip_id)
     allowed: dict[str, Any] = {}
     if "name" in changes:
         allowed["name"] = changes["name"]
@@ -65,6 +74,14 @@ def update_trip(db: Database, trip_id: int, changes: dict[str, Any]) -> None:
         allowed["emoji"] = changes["emoji"] or None
     if "is_template" in changes:
         allowed["is_template"] = int(changes["is_template"])
+    if "departure_date" in changes:
+        allowed["departure_date"] = changes["departure_date"] or None
+
+    # Templates never carry a departure date
+    resulting_is_template = bool(allowed.get("is_template", current["is_template"]))
+    if resulting_is_template and ("is_template" in allowed or "departure_date" in allowed):
+        allowed["departure_date"] = None
+
     if allowed:
         assignments = ", ".join(f"{k} = ?" for k in allowed)
         db.execute(

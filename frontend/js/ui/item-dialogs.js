@@ -238,14 +238,12 @@ export function openEditItemModal(item) {
         try {
           const res = await offlineQueue.execute('updateItem', [item.id, { category_id, name, quantity, note, assignee_ids }]);
           if (res.offline) {
-            item.category_id = category_id;
-            item.name = name;
-            item.quantity = quantity;
-            item.note = note;
-            item.assignee_ids = assignee_ids;
-            store.emit('item-updated', item);
+            store.applyItemUpdate({ ...item, category_id, name, quantity, note, assignee_ids });
             toast.show('הפריט עודכן (יישמר בשרת בעת חיבור) 💾', 'info');
           } else {
+            if (res.result) {
+              store.applyItemUpdate(res.result);
+            }
             toast.show('הפריט עודכן', 'success');
           }
           modal.close('edit-item-modal');

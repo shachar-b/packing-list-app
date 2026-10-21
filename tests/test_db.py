@@ -13,21 +13,22 @@ from app.db import Database
 def test_migrations_create_schema(db: Database) -> None:
     tables = {r[0] for r in db.fetchall("SELECT name FROM sqlite_master WHERE type='table'")}
     assert {"trips", "categories", "items", "family_members", "item_assignees", "schema_migrations"} <= tables
-    assert db.schema_version() == 1
+    assert db.schema_version() == 2
 
 
 def test_migrations_are_idempotent(db: Database) -> None:
     assert db.migrate() == []
-    assert db.schema_version() == 1
+    assert db.schema_version() == 2
 
 
 def test_new_migration_is_applied_once(db: Database, tmp_path: Path) -> None:
     mig_dir = tmp_path / "migs"
     mig_dir.mkdir()
     (mig_dir / "0001_initial.sql").write_text("SELECT 1;", encoding="utf-8")
-    (mig_dir / "0002_add_flag.sql").write_text("ALTER TABLE trips ADD COLUMN archived INTEGER DEFAULT 0;")
+    (mig_dir / "0002_trip_departure_date.sql").write_text("SELECT 1;", encoding="utf-8")
+    (mig_dir / "0003_add_flag.sql").write_text("ALTER TABLE trips ADD COLUMN archived INTEGER DEFAULT 0;")
     (mig_dir / "README.txt").write_text("ignored")
-    assert db.migrate(mig_dir) == [2]
+    assert db.migrate(mig_dir) == [3]
     assert db.migrate(mig_dir) == []
     cols = {r["name"] for r in db.fetchall("PRAGMA table_info(trips)")}
     assert "archived" in cols
@@ -36,11 +37,11 @@ def test_new_migration_is_applied_once(db: Database, tmp_path: Path) -> None:
 def test_failed_migration_rolls_back(db: Database, tmp_path: Path) -> None:
     mig_dir = tmp_path / "migs"
     mig_dir.mkdir()
-    (mig_dir / "0002_broken.sql").write_text("CREATE TABLE ok_table (id INTEGER); THIS IS NOT SQL;")
+    (mig_dir / "0003_broken.sql").write_text("CREATE TABLE ok_table (id INTEGER); THIS IS NOT SQL;")
     with pytest.raises(sqlite3.Error):
         db.migrate(mig_dir)
     assert db.fetchone("SELECT name FROM sqlite_master WHERE name='ok_table'") is None
-    assert db.schema_version() == 1
+    assert db.schema_version() == 2
 
 
 def test_pragmas(db: Database) -> None:

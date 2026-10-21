@@ -3,7 +3,7 @@
  */
 
 import { api } from '../api.js';
-import { store } from '../store.js';
+import { store, formatDepartureCountdown } from '../store.js';
 import { modal } from './modal.js';
 import { toast } from './toast.js';
 import { formatWhatsAppSummary, copyToClipboard, exportAllDataJson, exportCurrentTripJson, triggerJsonImport, processImportDocument } from '../share.js';
@@ -22,6 +22,10 @@ export function openTripDrawer() {
     const total = t.total_items || 0;
     const packed = t.packed_items || 0;
     const pct = total === 0 ? 0 : Math.round((packed / total) * 100);
+    const countdown = formatDepartureCountdown(t.departure_date, t.is_template);
+    const countdownBadge = countdown
+      ? `<span class="trip-countdown-badge tone-${countdown.tone}" title="תאריך יציאה: ${countdown.formattedDate}">📅 ${countdown.text}</span>`
+      : '';
 
     return `
       <div class="trip-drawer-item ${isSelected ? 'active' : ''}" data-trip-id="${t.id}" style="
@@ -33,8 +37,11 @@ export function openTripDrawer() {
         <div style="display: flex; align-items: center; gap: 0.75rem; min-width: 0;">
           <span style="font-size: 1.5rem; line-height: 1;">${t.emoji || '🧳'}</span>
           <div style="min-width: 0;">
-            <div style="font-weight: 700; color: var(--color-text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-              ${t.name}
+            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+              <span style="font-weight: 700; color: var(--color-text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                ${t.name}
+              </span>
+              ${countdownBadge}
             </div>
             <div style="font-size: 0.8rem; color: var(--color-text-muted);">
               ${t.is_template ? `${total} פריטים בתבנית` : `${packed} / ${total} נארזו (${pct}%)`}
@@ -162,6 +169,12 @@ export function openNewTripModal(defaultIsTemplate = false) {
           <span class="form-hint">שכפול מעתיק את כל הקטגוריות והפריטים כשהם מסומנים כלא ארוזים.</span>
         </div>
 
+        <div class="form-group" id="new-trip-date-group" style="display: ${defaultIsTemplate ? 'none' : 'block'};">
+          <label class="form-label" for="trip-departure-date">📅 תאריך יציאה לחופשה (אופציונלי)</label>
+          <input type="date" id="trip-departure-date" class="form-input" style="direction: ltr; text-align: right;" />
+          <span class="form-hint">מציג ספירה לאחור (בימים) כדי לדעת כמה זמן נשאר להתארגן.</span>
+        </div>
+
         <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
           <input type="checkbox" id="trip-is-template" style="width: 18px; height: 18px;" ${defaultIsTemplate ? 'checked' : ''} />
           <label for="trip-is-template" style="font-weight: 500; cursor: pointer;">הגדר רשימה זו כתבנית לשימוש חוזר</label>
@@ -185,6 +198,13 @@ export function openNewTripModal(defaultIsTemplate = false) {
         });
       });
 
+      const templateCheckbox = dialog.querySelector('#trip-is-template');
+      const dateGroup = dialog.querySelector('#new-trip-date-group');
+      const dateInput = dialog.querySelector('#trip-departure-date');
+      templateCheckbox.addEventListener('change', () => {
+        dateGroup.style.display = templateCheckbox.checked ? 'none' : 'block';
+      });
+
       const form = dialog.querySelector('#new-trip-form');
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -192,12 +212,13 @@ export function openNewTripModal(defaultIsTemplate = false) {
         const emoji = emojiInput.value.trim() || null;
         const sourceIdVal = dialog.querySelector('#trip-source').value;
         const source_trip_id = sourceIdVal ? parseInt(sourceIdVal, 10) : null;
-        const is_template = dialog.querySelector('#trip-is-template').checked;
+        const is_template = templateCheckbox.checked;
+        const departure_date = is_template ? null : (dateInput.value || null);
 
         if (!name) return;
 
         try {
-          const trip = await api.createTrip({ name, emoji, is_template, source_trip_id });
+          const trip = await api.createTrip({ name, emoji, is_template, departure_date, source_trip_id });
           modal.close('new-trip-modal');
           toast.show('חופשה נוצרה בהצלחה! 🎉', 'success');
           await store.selectTrip(trip.id);
@@ -234,6 +255,15 @@ export function openEditTripModal(trip) {
           </div>
         </div>
 
+        <div class="form-group" id="edit-trip-date-group" style="display: ${trip.is_template ? 'none' : 'block'};">
+          <label class="form-label" for="edit-trip-departure-date">📅 תאריך יציאה לחופשה (אופציונלי)</label>
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <input type="date" id="edit-trip-departure-date" class="form-input" value="${trip.departure_date || ''}" style="direction: ltr; text-align: right; flex: 1;" />
+            <button type="button" id="clear-departure-date-btn" class="btn btn-secondary btn-sm" title="נקה תאריך">נקה</button>
+          </div>
+          <span class="form-hint">מציג ספירה לאחור (בימים) בראש הרשימה.</span>
+        </div>
+
         <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
           <input type="checkbox" id="edit-trip-is-template" style="width: 18px; height: 18px;" ${trip.is_template ? 'checked' : ''} />
           <label for="edit-trip-is-template" style="font-weight: 500; cursor: pointer;">הגדר רשימה זו כתבנית לשכפול</label>
@@ -266,15 +296,26 @@ export function openEditTripModal(trip) {
         });
       });
 
+      const templateCheckbox = dialog.querySelector('#edit-trip-is-template');
+      const dateGroup = dialog.querySelector('#edit-trip-date-group');
+      const dateInput = dialog.querySelector('#edit-trip-departure-date');
+      templateCheckbox.addEventListener('change', () => {
+        dateGroup.style.display = templateCheckbox.checked ? 'none' : 'block';
+      });
+      dialog.querySelector('#clear-departure-date-btn')?.addEventListener('click', () => {
+        dateInput.value = '';
+      });
+
       const form = dialog.querySelector('#edit-trip-form');
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const name = dialog.querySelector('#edit-trip-name').value.trim();
         const emoji = emojiInput.value.trim() || null;
-        const is_template = dialog.querySelector('#edit-trip-is-template').checked;
+        const is_template = templateCheckbox.checked;
+        const departure_date = is_template ? null : (dateInput.value || null);
 
         try {
-          await api.updateTrip(trip.id, { name, emoji, is_template });
+          await api.updateTrip(trip.id, { name, emoji, is_template, departure_date });
           modal.close('edit-trip-modal');
           toast.show('השינויים נשמרו בהצלחה', 'success');
           await store.refreshCurrentTrip();

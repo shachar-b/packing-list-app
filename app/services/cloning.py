@@ -13,6 +13,7 @@ def clone_trip(
     name: str,
     emoji: str | None = None,
     is_template: bool = False,
+    departure_date: str | None = None,
     keep_packed: bool = False,
 ) -> int:
     """Create a new trip from ``source_trip_id``. Packed flags are reset unless ``keep_packed``.
@@ -23,7 +24,11 @@ def clone_trip(
     if source is None:
         trips.ensure_exists(db, source_trip_id)  # raises NotFoundError
     new_trip_id = trips.create_trip(
-        db, name=name, emoji=emoji if emoji is not None else source["emoji"], is_template=is_template
+        db,
+        name=name,
+        emoji=emoji if emoji is not None else source["emoji"],
+        is_template=is_template,
+        departure_date=departure_date,
     )
 
     categories = db.fetchall(

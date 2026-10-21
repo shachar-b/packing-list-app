@@ -51,7 +51,13 @@ def export_document(db: Database, trip_ids: Sequence[int] | None = None) -> Expo
                 )
             cats.append(ExportCategory(name=c["name"], icon=c["icon"], items=exported_items))
         exported.append(
-            ExportTrip(name=detail["name"], emoji=detail["emoji"], is_template=detail["is_template"], categories=cats)
+            ExportTrip(
+                name=detail["name"],
+                emoji=detail["emoji"],
+                is_template=detail["is_template"],
+                departure_date=detail.get("departure_date"),
+                categories=cats,
+            )
         )
 
     member_list = [
@@ -87,7 +93,13 @@ def import_document(db: Database, doc: ExportDocument) -> tuple[list[int], list[
 
     new_ids: list[int] = []
     for t in doc.trips:
-        trip_id = trips_repo.create_trip(db, name=t.name, emoji=t.emoji, is_template=t.is_template)
+        trip_id = trips_repo.create_trip(
+            db,
+            name=t.name,
+            emoji=t.emoji,
+            is_template=t.is_template,
+            departure_date=t.departure_date,
+        )
         for c in t.categories:
             cat_id = categories_repo.create_category(db, trip_id, name=c.name, icon=c.icon)["id"]
             for i in c.items:

@@ -4,7 +4,7 @@
  */
 
 import { api } from '../api.js';
-import { store } from '../store.js';
+import { store, formatDepartureCountdown } from '../store.js';
 import { realtime } from '../realtime.js';
 import { offlineQueue } from '../offline-queue.js';
 import { toast } from './toast.js';
@@ -39,6 +39,7 @@ export class TripView {
     store.on('item-updated', (item) => this.handleGranularItemUpdated(item));
     store.on('item-created', () => this.renderCategoriesAndItems());
     store.on('item-deleted', () => this.renderCategoriesAndItems());
+    store.on('items-changed', () => this.renderCategoriesAndItems());
     store.on('category-updated', () => this.renderCategoriesAndItems());
     store.on('category-collapse-changed', (catId) => this.toggleCategoryAccordionDom(catId));
   }
@@ -74,10 +75,15 @@ export class TripView {
       return;
     }
 
+    const countdown = formatDepartureCountdown(trip.departure_date, trip.is_template);
+    const countdownBadge = countdown
+      ? `<span class="trip-countdown-badge tone-${countdown.tone}" title="תאריך יציאה: ${countdown.formattedDate}">📅 ${countdown.text}</span>`
+      : '';
+
     btn.innerHTML = `
       <span style="font-size: 1.4rem; line-height: 1;">${trip.emoji || '🧳'}</span>
       <span class="trip-name">${this.escape(trip.name)}</span>
-      ${trip.is_template ? '<span class="trip-badge">תבנית</span>' : ''}
+      ${trip.is_template ? '<span class="trip-badge">תבנית</span>' : countdownBadge}
       <span style="font-size: 0.8rem; color: var(--color-text-subtle);">▼</span>
     `;
   }
@@ -128,8 +134,14 @@ export class TripView {
 
   handleGranularItemUpdated(item) {
     const row = document.getElementById(`item-row-${item.id}`);
-    if (!row) {
+    const currentCard = row?.closest('.category-card');
+    const currentCatId = currentCard ? parseInt(currentCard.getAttribute('data-cat-id'), 10) : null;
+    const hasActiveFilter =
+      store.filter.status !== 'all' || store.filter.memberId !== null || Boolean(store.filter.search);
+
+    if (!row || (item.category_id && currentCatId !== item.category_id) || hasActiveFilter) {
       this.renderCategoriesAndItems();
+      this.updateProgressBarOnly();
       return;
     }
 
@@ -159,6 +171,20 @@ export class TripView {
     if (noteEl) {
       noteEl.textContent = item.note || '';
       noteEl.style.display = item.note ? 'block' : 'none';
+    }
+
+    const assigneesEl = row.querySelector('.item-assignees');
+    if (assigneesEl) {
+      const memberMap = new Map(store.members.map((m) => [m.id, m]));
+      assigneesEl.innerHTML = (item.assignee_ids || [])
+        .map((id) => memberMap.get(id))
+        .filter(Boolean)
+        .map((m) => `
+          <span class="assignee-chip" style="background-color: ${m.color};" title="${this.escape(m.name)}">
+            <span>${m.emoji || '👤'}</span>
+            <span>${this.escape(m.name)}</span>
+          </span>
+        `).join('');
     }
 
     this.updateProgressBarOnly();

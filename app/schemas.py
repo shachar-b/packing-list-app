@@ -7,15 +7,27 @@ lets two devices edit different attributes of the same item concurrently.
 
 from __future__ import annotations
 
+from datetime import date as _date
 from typing import Annotated, Any, ClassVar, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, StringConstraints, model_validator
+from pydantic import AfterValidator, BaseModel, ConfigDict, Field, StringConstraints, model_validator
+
+
+def _validate_iso_date(v: str) -> str:
+    _date.fromisoformat(v)
+    return v
+
 
 Name = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=120)]
 MemberName = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=40)]
 Note = Annotated[str, StringConstraints(strip_whitespace=True, max_length=500)]
 Emoji = Annotated[str, StringConstraints(strip_whitespace=True, max_length=16)]
 Color = Annotated[str, StringConstraints(pattern=r"^#[0-9a-fA-F]{6}$")]
+IsoDate = Annotated[
+    str,
+    StringConstraints(strip_whitespace=True, pattern=r"^\d{4}-\d{2}-\d{2}$"),
+    AfterValidator(_validate_iso_date),
+]
 Quantity = Annotated[int, Field(ge=1, le=999)]
 Id = Annotated[int, Field(ge=1)]
 
@@ -128,6 +140,7 @@ class TripCreate(_Request):
     name: Name
     emoji: Emoji | None = None
     is_template: bool = False
+    departure_date: IsoDate | None = None
     source_trip_id: Id | None = Field(
         default=None, description="If given, categories and items are cloned (all unpacked)."
     )
@@ -138,12 +151,14 @@ class TripUpdate(_Partial):
     name: Name | None = None
     emoji: Emoji | None = None
     is_template: bool | None = None
+    departure_date: IsoDate | None = None
 
 
 class CloneRequest(_Request):
     name: Name
     emoji: Emoji | None = None
     is_template: bool = False
+    departure_date: IsoDate | None = None
 
 
 class TripSummary(BaseModel):
@@ -151,6 +166,7 @@ class TripSummary(BaseModel):
     name: str
     emoji: str | None
     is_template: bool
+    departure_date: str | None = None
     total_items: int
     packed_items: int
     created_at: str
@@ -190,6 +206,7 @@ class ExportTrip(_Request):
     name: Name
     emoji: Emoji | None = None
     is_template: bool = False
+    departure_date: IsoDate | None = None
     categories: list[ExportCategory] = Field(default_factory=list, max_length=200)
 
 

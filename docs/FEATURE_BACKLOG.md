@@ -13,14 +13,13 @@ Features are **sorted by total estimated effort (Scoping/Design + Implementation
 | **1** | 🔑 Pre-Departure House Checklist | Very Low | Very Low | High | No |
 | **2** | 👥 Individual Family Member Packing Views | Very Low | Low | High | No |
 | **3** | 📲 Installable PWA + Offline Asset Caching | Very Low | Low | Very High | No |
-| **4** | 📅 Trip Departure Date & Days-Only Countdown | Very Low | Low | High | Yes (`trips`) |
-| **5** | ⚡ "Last-Minute / Morning-Of" Flag (`דקה 90`) | Low | Low–Med | Very High | Yes (`items`) |
-| **6** | 🛒 "Need to Buy" Pre-Trip Status (`לקנות`) | Low–Med | Low–Med | High | Yes (`items`) |
-| **7** | 🧩 Modular "Add-on Packs" (Mix & Match) | Medium | Medium | Very High | Optional |
-| **8** | 🔄 "Return-Trip / Repacking Check" Mode | Medium | Medium | High | Yes (`items`) |
-| **9** | 🧮 Duration / Nights Auto-Scaler | Med–High | Med–High | Med–High | Yes (`trips`/`items`) |
-| **10** | 🌲 Conditional & Dependent Sub-Items | High | High | Med–High | Yes (`items`) |
-| **11** | 🎒 Bag / Container Organization | High ⚠️ | High | Med–High | Yes |
+| **4** | ⚡ "Last-Minute / Morning-Of" Flag (`דקה 90`) | Low | Low–Med | Very High | Yes (`items`) |
+| **5** | 🛒 "Need to Buy" Pre-Trip Status (`לקנות`) | Low–Med | Low–Med | High | Yes (`items`) |
+| **6** | 🧩 Modular "Add-on Packs" (Mix & Match) | Medium | Medium | Very High | Optional |
+| **7** | 🔄 "Return-Trip / Repacking Check" Mode | Medium | Medium | High | Yes (`items`) |
+| **8** | 🧮 Duration / Nights Auto-Scaler | Med–High | Med–High | Med–High | Yes (`trips`/`items`) |
+| **9** | 🌲 Conditional & Dependent Sub-Items | High | High | Med–High | Yes (`items`) |
+| **10** | 🎒 Bag / Container Organization | High ⚠️ | High | Med–High | Yes |
 
 ---
 
@@ -53,19 +52,7 @@ Features are **sorted by total estimated effort (Scoping/Design + Implementation
 
 ---
 
-## 4. 📅 Trip Departure Date & Days-Only Countdown
-- **Effort:** 🟢 Low (Scoping: Very Low | Impl & Test: ~1 hour)
-- **UX / QoL Impact:** ⭐ High — Clear sense of preparation urgency without visual clutter.
-- **Concept:** Allow attaching an optional departure date to active (non-template) trips.
-- **Behavior:**
-  - Add nullable `departure_date` (`YYYY-MM-DD`) column to `trips`.
-  - Date picker field in Create/Edit Trip dialogs (automatically hidden when `is_template` is checked).
-  - Displays a clean, **days-only** countdown badge in the trip header and drawer (e.g., `בעוד 5 ימים`, `מחר!`, `היום! 🎉`) — no hours/minutes/seconds ticker noise.
-- **Status:** Backlog — Ready to build.
-
----
-
-## 5. ⚡ "Last-Minute / Morning-Of" Flag (דקה 90 / בוקר היציאה)
+## 4. ⚡ "Last-Minute / Morning-Of" Flag (דקה 90 / בוקר היציאה)
 - **Effort:** 🟡 Low–Medium (Scoping: Low | Impl & Test: ~1.5 hours)
 - **UX / QoL Impact:** 🌟 Very High — Solves one of the biggest departure-morning pain points.
 - **Concept:** Distinguish between items packed the night before and items that can only be packed right before walking out the door (toothbrushes, bedside chargers, chilled food/pancakes from the fridge, laptop, medications).
@@ -76,7 +63,7 @@ Features are **sorted by total estimated effort (Scoping/Design + Implementation
 
 ---
 
-## 6. 🛒 "Need to Buy" Pre-Trip Status / Shopping Filter (להשלים בקניות)
+## 5. 🛒 "Need to Buy" Pre-Trip Status / Shopping Filter (להשלים בקניות)
 - **Effort:** 🟡 Low–Medium (Scoping: Low–Med | Impl & Test: ~1.5 hours)
 - **UX / QoL Impact:** ⭐ High — Bridges pre-trip errands and actual packing.
 - **Concept:** Reviewing the packing list a few days before the trip often reveals missing or depleted items (sunscreen, mosquito spray, wine, road snacks).
@@ -88,7 +75,7 @@ Features are **sorted by total estimated effort (Scoping/Design + Implementation
 
 ---
 
-## 7. 🧩 Modular "Add-on Packs" / Mini-Templates (Mix & Match)
+## 6. 🧩 Modular "Add-on Packs" / Mini-Templates (Mix & Match)
 - **Effort:** 🟡 Medium (Scoping: Medium | Impl & Test: ~2 hours)
 - **UX / QoL Impact:** 🌟 Very High — Keeps base templates lean while making special trip variations effortless.
 - **Concept:** Instead of maintaining many monolithic templates for every permutation of trip, allow injecting small modular "equipment packs" (5–10 items) into any active trip with a single click.
@@ -101,7 +88,7 @@ Features are **sorted by total estimated effort (Scoping/Design + Implementation
 
 ---
 
-## 8. 🔄 "Return-Trip / Repacking Check" Mode (אריזה לחזרה הביתה)
+## 7. 🔄 "Return-Trip / Repacking Check" Mode (אריזה לחזרה הביתה)
 - **Effort:** 🟡 Medium (Scoping: Medium | Impl & Test: ~2–2.5 hours)
 - **UX / QoL Impact:** ⭐ High — Prevents leaving chargers in wall sockets or favorite towels at the cabin.
 - **Concept:** At the end of the vacation, reset the checklist for permanent gear so you can check items off as they go back into the car, while ignoring consumables that were eaten or used.
@@ -112,7 +99,7 @@ Features are **sorted by total estimated effort (Scoping/Design + Implementation
 
 ---
 
-## 9. 🧮 Duration / Nights Auto-Scaler (מחשבון כמויות לפי מספר לילות)
+## 8. 🧮 Duration / Nights Auto-Scaler (מחשבון כמויות לפי מספר לילות)
 - **Effort:** 🟠 Medium–High (Scoping: Med–High | Impl & Test: ~2.5–3 hours)
 - **UX / QoL Impact:** ⭐ Medium–High — Saves manual quantity adjustments when cloning templates for longer/shorter trips.
 - **Concept:** Scale per-day items (clothes, underwear, pajamas) automatically when cloning a 2-night template into a 4-night trip, while keeping fixed gear (Ninja Grill, chargers, shampoo) at `1`.
@@ -123,16 +110,16 @@ Features are **sorted by total estimated effort (Scoping/Design + Implementation
 
 ---
 
-## 10. 🌲 Conditional & Dependent Sub-Items (Nested Gear)
+## 9. 🌲 Conditional & Dependent Sub-Items (Nested Gear)
 - **Effort:** 🔴 High (Scoping: High | Impl & Test: ~3.5–4 hours)
-- **UX / QoL Impact:** ⭐ Medium–High (Note: much of the value can also be achieved more simply via **#7 Modular Add-on Packs**).
+- **UX / QoL Impact:** ⭐ Medium–High (Note: much of the value can also be achieved more simply via **#6 Modular Add-on Packs**).
 - **Concept:** Some packing items only have a reason to exist if their "parent" equipment is being packed (e.g., `נינג׳ה גריל` -> `מלקחיים`, `נייר אפייה מותאם לנינג'ה`, `תרסיס שמן`).
 - **Behavior:** Requires parent-child item hierarchy (`parent_item_id`), nested mobile rendering, and progress calculation rules when a parent item is unchecked or omitted.
 - **Status:** Backlog.
 
 ---
 
-## 11. 🎒 Bag / Container Organization (חלוקה לתיקים / מיקום ברכב)
+## 10. 🎒 Bag / Container Organization (חלוקה לתיקים / מיקום ברכב)
 - **Effort:** 🔴 High (Scoping: High ⚠️ | Impl & Test: ~4+ hours)
 - **UX / QoL Impact:** ⭐ Medium–High
 - **Concept:** Know which bag holds which item (`🚗 תיק לאוטו`, `🏖️ תיק בריכה נגיש`, `🧊 צידנית`, `🧳 מזוודה`) so you don't unpack the entire trunk on the way north just to find swimsuits or snacks.
@@ -146,6 +133,14 @@ Features are **sorted by total estimated effort (Scoping/Design + Implementation
 ---
 
 ## ✅ Completed Features
+
+### 📅 Trip Departure Date & Days-Only Countdown
+- **Concept:** Attach an optional departure date to active (non-template) trips and display a clean, days-only countdown badge.
+- **Implementation:**
+  - Added nullable `departure_date` (`YYYY-MM-DD`) column to `trips` via migration `0002_trip_departure_date.sql` and wired through create, edit, clone, and JSON export/import.
+  - Date picker in Create/Edit Trip modals (automatically hidden when `is_template` is checked, plus a quick clear button in Edit Trip).
+  - Days-only countdown badge (`בעוד X ימים`, `מחר! 🎒`, `היום! 🎉`, etc.) rendered in both the main trip header and the trip drawer.
+- **Status:** ✅ Completed.
 
 ### 📴 Offline Mutations Queue & Reconciliation
 - **Concept:** Full offline usage (e.g., in airplane mode or spotty mobile reception).
